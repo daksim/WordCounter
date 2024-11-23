@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Counter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        textarea {
+            width: 90%; /* Adjusted for better responsiveness */
+            max-width: 800px; /* Maximum width for larger screens */
+            height: 30vh; /* Height relative to viewport */
+            padding: 15px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            font-size: 16px;
+            resize: none;
+            margin-bottom: 15px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        textarea:focus {
+            border-color: #007BFF; /* Highlight border on focus */
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); /* Subtle glow effect */
+            outline: none;
+        }
+        #result {
+            font-size: 18px;
+            color: #555;
+        }
+        p {
+            margin: 0;
+        }
+        footer {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <h1>Word Counter</h1>
+    <textarea id="textInput" placeholder="Type or paste your text here..."></textarea>
+    <p id="result">Word count: 0</p>
+    <footer>Built with ❤️ using Flask</footer>
+    <script>
+        // Function to send the text to the backend and get the word count
+        function countWords(text) {
+            fetch("/count", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Update the word count in the result section
+                document.getElementById("result").textContent = `Word count: ${data.count}`;
+            });
+        }
+
+        // Add an event listener to the textarea to detect changes
+        const textInput = document.getElementById("textInput");
+        textInput.addEventListener("input", () => {
+            // Get the current text from the textarea
+            const text = textInput.value;
+            // Call the function to count words
+            countWords(text);
+        });
+    </script>
+</body>
+</html>
